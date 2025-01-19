@@ -9,7 +9,8 @@ class NetworkDefence(gym.Env):
         super(NetworkDefence, self).__init__()
         # Action Space : 0 - Allow | 1 - Deny
         self.action_space = spaces.Discrete(2)
-        # TODO: Define the Observation Space 
+        # Observation Space
+        self.observation_space = spaces.Box(low=0, high=1, shape=(41,), dtype=np.float32)
         
     # Define Step Function
     def step(self, action):
