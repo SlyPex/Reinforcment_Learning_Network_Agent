@@ -20,12 +20,15 @@ class NetworkDefence(gym.Env):
     
     # Define Step Function
     def step(self, action):
+        done = False
         reward = int(action == self.expected_action)
         self.current_step += 1
         full_row = self.Dataframe.iloc[self.current_step].values
         new_state = full_row[:-1]
         self.expected_action = [-1]
-        return 
+        if self.current_step == self.max_steps:
+            done: True
+        return new_state, reward, done, {}
     
     
     def reset(self, *, seed = None, options = None):
