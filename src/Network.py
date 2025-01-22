@@ -25,7 +25,7 @@ class NetworkEnv(gym.Env):
         self.current_step += 1
         full_row = self.Dataframe.iloc[self.current_step].values
         new_state = full_row[:-1]
-        self.expected_action = [-1]
+        self.expected_action = full_row[-1]
         if self.current_step == self.max_steps:
             done: True
         return new_state, reward, done, {}, {}
