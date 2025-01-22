@@ -31,7 +31,7 @@ class NetworkEnv(gym.Env):
         return new_state, reward, done, {}, {}
     
     
-    def reset(self, *, seed = None, options = None):
+    def reset(self):
         self.Dataframe = self.Dataframe.sample(frac=1).reset_index()
         self.current_step = 0
         full_row = self.Dataframe.iloc[self.current_step].values

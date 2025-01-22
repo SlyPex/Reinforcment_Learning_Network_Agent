@@ -1,10 +1,8 @@
 import numpy as np
-from datasets import load_dataset
 import pandas as pd
-import pickle as pkl
-from pprint import pprint as print
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
-def TransformDataset(Dataset : pd.DataFrame) -> pd.DataFrame:
+def TransformDataset(Dataset : pd.DataFrame, Threshold: int = 0.95) -> pd.DataFrame:
         if bool(Dataset.isna().sum().any()):
                 Dataset.dropna(inplace=True)
         # Change the class to Integer values manually to math action space in the ENV
@@ -12,13 +10,16 @@ def TransformDataset(Dataset : pd.DataFrame) -> pd.DataFrame:
         Dataset.iloc[:, -1].astype(dtype=np.int64)
         # Change categorical data to integer data of the remaining columns
         categorical_columns = Dataset.select_dtypes(include=['object']).columns
-        with open('/home/slypex/studies/3CS/Ingeniorat/AdvanDL/Mini-Project/project/src/Encoders/labelencoder.pkl', 'rb') as label_encoder:
-                le = pkl.load(label_encoder)
-                for col in categorical_columns:
-                        Dataset[col] = le[col].transform(Dataset[col])
-        with open('/home/slypex/studies/3CS/Ingeniorat/AdvanDL/Mini-Project/project/src/Encoders/scaler.pkl', 'rb') as scaler_fd:
-                scaler = pkl.load(scaler_fd)
-                scaled_data = scaler.transform(Dataset)
-        
-        return pd.DataFrame(scaled_data, columns=Dataset.columns)
+        for col in categorical_columns:
+                le = LabelEncoder()
+                Dataset[col] = le.fit_transform(Dataset[col])
+        scaler = MinMaxScaler()
+        scaled_df = pd.DataFrame(scaler.fit_transform(Dataset), columns=Dataset.columns)
+        # Drop high correlated columns
+        correlation = scaled_df.corr()
+        upper_tri = correlation.where(np.triu(np.ones(correlation.shape, dtype=bool), k=1))
+        to_drop = [column for column in upper_tri.columns if any(upper_tri[column] >= Threshold)]
+        scaled_df.drop(to_drop, inplace=True)
+        print(len(scaled_df.columns))
+        return scaled_df
         
