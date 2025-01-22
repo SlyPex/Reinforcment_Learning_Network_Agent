@@ -17,13 +17,20 @@ class NetworkDefence(gym.Env):
         self.current_step = 0
         self.max_steps = max_steps
         
+    
     # Define Step Function
     def step(self, action):
+        done = False
+        reward = int(action == self.expected_action)
         self.current_step += 1
         full_row = self.Dataframe.iloc[self.current_step].values
         new_state = full_row[:-1]
-        self.expected_action = []
-        return 
+        self.expected_action = [-1]
+        if self.current_step == self.max_steps:
+            done: True
+        return new_state, reward, done, {}
+    
+    
     def reset(self, *, seed = None, options = None):
         self.Dataframe = self.Dataframe.sample(frac=1).reset_index()
         self.current_step = 0
