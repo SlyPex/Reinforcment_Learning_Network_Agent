@@ -4,3 +4,4 @@ numpy
 datasets
 sklearn
 seaborn
+stable-baselines3
