@@ -19,7 +19,7 @@ def TransformDataset(Dataset : pd.DataFrame, Threshold: int = 0.95) -> pd.DataFr
         correlation = scaled_df.corr()
         upper_tri = correlation.where(np.triu(np.ones(correlation.shape, dtype=bool), k=1))
         to_drop = [column for column in upper_tri.columns if any(upper_tri[column] >= Threshold)]
-        scaled_df.drop(to_drop, inplace=True)
+        scaled_df = scaled_df.drop(columns=to_drop)
         print(len(scaled_df.columns))
         return scaled_df
         

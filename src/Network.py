@@ -20,22 +20,22 @@ class NetworkEnv(gym.Env):
     
     # Define Step Function
     def step(self, action):
-        done = False
+        terminated = False
+        truncated = False
         reward = int(action == self.expected_action)
         self.current_step += 1
         full_row = self.Dataframe.iloc[self.current_step].values
-        new_state = full_row[:-1]
+        new_state = full_row[:-1].copy()
         self.expected_action = full_row[-1]
         if self.current_step == self.max_steps:
-            done: True
-        return new_state, reward, done, {}, {}
+            truncated = True
+        return new_state, reward, terminated, truncated, {}
     
-    
-    def reset(self):
-        self.Dataframe = self.Dataframe.sample(frac=1).reset_index()
+    # Define Reset Function
+    def reset(self, *, seed = None, options = None):
+        self.Dataframe = self.Dataframe.sample(frac=1).reset_index(drop=True)
         self.current_step = 0
         full_row = self.Dataframe.iloc[self.current_step].values
-        start_state = full_row[:-1]
+        init_state = full_row[:-1].copy()
         self.expected_action = full_row[-1]
-        return start_state, {}
-    
+        return init_state, {}
