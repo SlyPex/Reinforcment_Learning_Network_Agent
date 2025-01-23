@@ -5,3 +5,5 @@ datasets
 sklearn
 seaborn
 stable-baselines3
+tqdm
+rich

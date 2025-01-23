@@ -13,7 +13,7 @@ class NetworkEnv(gym.Env):
         self.action_space = spaces.Discrete(2)
         # Observation Space
         self.observation_space = spaces.Box(low=0, high=1, shape=(int(self.shape[1]) - 1, ), dtype=np.float64)
-        
+        self.taken_action = []
         self.current_step = 0
         self.max_steps = max_steps
         

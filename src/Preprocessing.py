@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
-def TransformDataset(Dataset : pd.DataFrame, Threshold: int = 0.95) -> pd.DataFrame:
+def TransformDataset(Dataset : pd.DataFrame, Threshold: int = 0.95, Corr : bool = False) -> pd.DataFrame:
         if bool(Dataset.isna().sum().any()):
                 Dataset.dropna(inplace=True)
         # Change the class to Integer values manually to math action space in the ENV
@@ -16,10 +16,11 @@ def TransformDataset(Dataset : pd.DataFrame, Threshold: int = 0.95) -> pd.DataFr
         scaler = MinMaxScaler()
         scaled_df = pd.DataFrame(scaler.fit_transform(Dataset), columns=Dataset.columns)
         # Drop high correlated columns
-        correlation = scaled_df.corr()
-        upper_tri = correlation.where(np.triu(np.ones(correlation.shape, dtype=bool), k=1))
-        to_drop = [column for column in upper_tri.columns if any(upper_tri[column] >= Threshold)]
-        scaled_df = scaled_df.drop(columns=to_drop)
+        if Corr:
+                correlation = scaled_df.corr()
+                upper_tri = correlation.where(np.triu(np.ones(correlation.shape, dtype=bool), k=1))
+                to_drop = [column for column in upper_tri.columns if any(upper_tri[column] >= Threshold)]
+                scaled_df = scaled_df.drop(columns=to_drop)
         print(len(scaled_df.columns))
-        return scaled_df
+        return scaled_df 
         
