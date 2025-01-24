@@ -24,10 +24,15 @@ class NetworkEnv(gym.Env):
         truncated = False
         reward = int(action == self.expected_action)
         self.current_step += 1
-        full_row = self.Dataframe.iloc[self.current_step].values
-        new_state = full_row[:-1].copy()
-        self.expected_action = full_row[-1]
-        if self.current_step == self.max_steps:
+        if self.current_step < len(self.Dataframe):
+            full_row = self.Dataframe.iloc[self.current_step].values
+            new_state = full_row[:-1].copy()
+            self.expected_action = full_row[-1]
+        else:
+            # If we exceed the dataset, terminate
+            new_state = None
+            terminated = True
+        if self.current_step >= self.max_steps:
             truncated = True
         return new_state, reward, terminated, truncated, {}
     
