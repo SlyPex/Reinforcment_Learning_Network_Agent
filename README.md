@@ -7,4 +7,4 @@
 
 This is a Mini-Project for our RL course in University, the objective is to get familiar with RL core concepts.
 
-> Ain't much but it's HONEST work.
+> Ain't much. but it's honest work.
