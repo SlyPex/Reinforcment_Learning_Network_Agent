@@ -23,7 +23,7 @@ Dataset has a target class which classes each sample into _Normal_ or _Anomaly_,
 - `Deny` which corresponds to `Anomaly`
 
 ### Reward Function
-Simply, if the agent allows/denies 
+Simply, if the agent allows/denies a normal/anomaly traffic respectively it get rewarded +1 otherwise it gets 0.
 
 ## Usage
 First clone this project either by:
